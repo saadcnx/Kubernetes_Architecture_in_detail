@@ -1,0 +1,25 @@
+GRPC
+
+gRPC is like a super fast phone line that lets different parts of a computer system talk to each other.
+
+HTTP/2 (2015): Bi-directional, Multiplexing. (gRPC is built on this).
+
+What is gRPC?
+
+gRPC stands for Google's Remote Procedure Call. It's just a way for one computer program to ask another program (even on a different computer) to do something. Google made it to keep communication between services lightning fast.
+
+Why is it special?
+
+First, it uses HTTP/2 which is the newer version of web communication. Think of it like having a highway with multiple lanes instead of a single road. You can handle many requests at the same time on just one connection.
+
+Second, it uses Protocol Buffers (protobuf) instead of JSON. Protobuf is like sending compact, binary text messages. It's much smaller and faster than JSON, kind of like sending a zipped file instead of a big text document.
+
+Third, it's perfect for microservices. This is when you have many small independent services working together. If you are running lots of small services in Kubernetes (like a team of workers), they need to chat quickly and efficiently.
+
+Real-life Example
+
+Imagine a food delivery app. The order service that takes orders needs to talk to the payment service to process payments, the restaurant service to tell the kitchen about the order, and the delivery service to assign drivers. With gRPC, all these services can communicate instantly without slowing anything down.
+
+Key Benefits
+
+It is much faster than traditional REST APIs. It uses less network bandwidth. It has built-in support for streaming data. And it automatically generates code for many languages.
