@@ -1,0 +1,71 @@
+REST 
+
+What is REST?
+
+REST = Representational State Transfer
+
+It is a rulebook for how web APIs should work. It uses HTTP methods (GET, POST, PUT, DELETE) and simple URLs.
+
+How REST Works with Example
+
+Pizza delivery app:
+
+Action	        Method	    Example URL
+See menu	    GET	        /menu
+Place order	    POST	    /order
+Update order	PUT	        /order/123
+Cancel order	DELETE  	/order/123
+
+Key Features of REST
+1. Stateless (No Memory)
+Every request is independent. Server does not remember past requests.
+Benefit: Easy to scale. Any server can handle any request.
+
+2. Resource Based
+Everything is a "thing" with a URL.
+Example: /users , /users/1
+
+3. Uses HTTP Methods
+Method	    Meaning
+GET	        Read data
+POST	    Create data
+PUT	        Update data
+DELETE	    Remove data
+
+4. Returns JSON
+Data comes in JSON format. Lightweight and easy for both humans and machines to read.
+
+When to Use REST
+
+Good for:
+
+Public APIs like Twitter, GitHub
+Web apps with React or Angular
+Mobile apps
+
+Avoid REST when:
+
+You need very fast microservices (use gRPC instead)
+You need real time communication (use WebSockets or gRPC)
+
+REST in Kubernetes
+Kubernetes itself runs on REST APIs.
+
+Example:
+
+GET /api/v1/pods → List all pods
+POST /api/v1/namespaces/default/pods → Create a new pod
+
+Even kubectl command line tool calls these REST APIs.
+
+Real Benefit for IT Working
+REST is simple and universal. Any programming language can use it. Browsers understand it easily. This makes REST perfect for public facing APIs where many different types of clients need to connect.
+
+Final Summary
+REST is the standard way to build web APIs
+Uses HTTP methods (GET, POST, PUT, DELETE)
+Stateless and returns JSON
+Kubernetes itself uses REST internally
+Use REST for public APIs and web apps
+Use gRPC for fast internal microservices
+
