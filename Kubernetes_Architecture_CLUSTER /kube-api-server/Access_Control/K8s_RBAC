@@ -1,0 +1,41 @@
+RBAC - Role-Based Access Control
+
+Simple Meaning
+RBAC gives access based on what role a person has in the organization.
+
+Real world example:
+
+Manager can only see his own team
+HR can only manage salary
+Engineer can only access code repositories
+
+Same in Kubernetes: You define roles and decide which user can do what.
+
+Basic RBAC Example
+
+Role	    Allowed Action	        Resource
+Developer	Create and Update	    Pods
+Admin	    Create and Delete	    All Resources
+Viewer	    Read Only	            All Resources
+
+Four Main RBAC Objects
+Object	            Purpose
+Role	            Defines permissions inside one namespace
+RoleBinding	        Connects a Role to a user
+ClusterRole	Defines permissions across whole cluster
+ClusterRoleBinding	Connects ClusterRole to a user
+
+Example Role
+This Role allows the user to only get, watch, and list pods in the default namespace. No create, no update, no delete.
+
+Rules:
+apiGroups: empty means core group
+resources: pods
+verbs: get, watch, list
+
+Real Benefit for IT Working
+Least privilege principle: Users get only what they need
+Easy to audit: You can see exactly who has which permissions
+Scalable: Create a Role once, bind many users to it
+Standard: Most Kubernetes clusters use RBAC as default
+
