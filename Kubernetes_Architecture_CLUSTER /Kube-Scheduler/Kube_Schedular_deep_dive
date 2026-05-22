@@ -1,0 +1,118 @@
+Kubernetes Scheduler - Explained with Exam Hall Example
+
+The Basic Idea
+Kubernetes Scheduler decides which worker node should run a new pod.
+Think of it like a teacher assigning seats to students in an exam hall.
+
+Kubernetes	    Exam Hall
+Pod	            Student
+Node	        Desk
+Scheduler	    Teacher assigning seats
+
+The Problem
+A new pod needs to run. There are many nodes available. Which node should the pod go to?
+
+The scheduler answers this question.
+
+Complete Scheduler Flow - Step by Step
+
+Phase	        Exam Hall Example	                                What Scheduler Does
+PreFilter	    Check student attendance	                        Basic validation of pod and nodes
+Filter	        Student is 5 feet tall, remove small desks	        Remove nodes that cannot run the pod (not enough CPU, memory, wrong architecture)
+PreScore	    Make list of available desks	                    Prepare remaining nodes for scoring
+Score	        Desk near AC gets 10 points, near fan gets 5 points	Give points to each node based on preferences
+Normalize	    Convert all scores to 0-100 scale	                Make scores fair across different plugins
+Reserve	        Block this desk for the student	                    Temporarily reserve the chosen node
+PostFilter	    No desk found, ask principal	                    Handle failure if no suitable node found
+PreBind	        Student, use this pen	                            Prepare pod for binding (mount volumes, setup network)
+Bind	        Sit down, exam starts	                            Assign pod to the node
+PostBind	    Bag placed under desk	                            Cleanup after successful binding
+
+Detailed Explanation of Each Phase
+1. PreFilter
+Check if the pod is valid. Does it have resource requests? Are there any nodes in the cluster?
+If basic checks fail, scheduling stops.
+
+2. Filter - Hard Requirements
+Remove nodes that cannot run the pod.
+Examples:
+
+Node does not have enough CPU or memory
+Node does not have required GPU
+Node has a taint that pod cannot tolerate
+Only nodes that pass filtering move forward.
+
+3. PreScore
+Prepare the list of nodes that passed filtering for scoring.
+
+4. Score - Soft Preferences
+Give points to each node based on preferences.
+Higher points means better node.
+
+Examples of scoring rules:
+
+Least allocated: Prefer nodes with more free resources
+Node affinity: Prefer nodes with specific labels
+Pod affinity: Prefer nodes where other specific pods are running
+Pod anti-affinity: Avoid nodes where other specific pods are running
+
+5. Normalize
+Convert scores to a standard 0-100 scale so no single plugin dominates.
+
+6. Reserve
+Temporarily lock the chosen node so no other scheduler assigns a different pod to it at the same time.
+
+7. PostFilter
+If no node was found after filtering, handle the failure. The pod stays in pending state until something changes.
+
+8. PreBind
+Perform any last minute setup before binding. Example: Mount volumes, setup network interfaces.
+
+9. Bind
+Officially assign the pod to the node. Update API Server with this decision.
+
+10. PostBind
+Cleanup tasks after successful binding. Notify other components.
+
+Real World Example - Exam Day
+A student named Ali needs a desk for his exam.
+
+Step	        What Happens
+PreFilter	    Teacher checks if Ali is present
+Filter	        Ali is 6 feet tall. Remove all small desks that are meant for short students. Also remove broken desks and desks without chairs
+PreScore	    Teacher makes a list of remaining good desks
+Score	        Desks are scored: Near window +10 points, near door +5 points, near AC +15 points, in back corner -5 points
+Normalize	    All desk scores are converted to a 0-100 scale
+Reserve	        The best desk (near AC, 95 points) is blocked for Ali
+PreBind	        Teacher gives Ali a pen and answer sheet
+Bind	        Ali sits down. Exam begins
+PostBind	    Teacher puts Ali's bag under the desk
+
+Final result: Ali gets the best possible seat based on his needs and preferences.
+
+Why This Matters in IT
+
+Without scheduler: You would manually assign every pod to a node. This is impossible at scale.
+
+With scheduler:
+
+Pods automatically get the best node
+Resources are used efficiently
+Failed nodes are automatically avoided
+You can add custom scheduling rules
+
+Useful Commands
+See scheduler events:
+kubectl get events --field-selector involvedObject.kind=Pod
+
+See scheduler logs for debugging:
+kubectl logs -n kube-system pod-name-of-scheduler
+
+Quick Summary Table
+Term	Meaning
+Filter	Remove nodes that cannot run the pod
+Score	Give points to remaining nodes
+Bind	Assign pod to best node
+Pending	Pod waiting for scheduling
+Node	Worker machine
+Taint	Mark a node to repel certain pods

@@ -1,0 +1,84 @@
+Node Placement in Kubernetes
+
+What is a Node?
+A node is a worker machine in your Kubernetes cluster. It can be a virtual machine or a physical server. Every node runs pods, and each pod contains containers.
+
+What is Node Placement?
+When you deploy a pod, Kubernetes must choose which node to run that pod on. This decision is called node placement.
+
+Real world example: You order food online. The system decides which restaurant branch will prepare and deliver your food. That branch is like a node.
+
+How Kubernetes Decides Placement by Default
+Kubernetes uses a component called the scheduler. It does three things:
+
+Looks at all available nodes
+Checks their health, available CPU, memory, and other resources
+Places your pod on the best suited node
+
+Things That Affect Node Placement
+
+1. Node Selectors
+This is the simplest way to control placement. You tell Kubernetes: Only place my pod on nodes with specific labels.
+Example: This pod will run only on nodes that have the label disktype=ssd.
+Real benefit: Useful when some nodes have special hardware like SSDs or GPUs.
+
+2. Node Affinity and Anti-Affinity
+This is more advanced than node selectors.
+
+Type	            Meaning
+Node Affinity	    Prefer or require certain node types
+Node Anti-Affinity	Avoid certain node types
+Example: Require that the pod runs on a node in the us-east-1a zone.
+
+Real benefit: You can express complex rules like "prefer nodes in zone A but also allow zone B if A is full."
+
+3. Taints and Tolerations
+Taints are applied to nodes. Tolerations are applied to pods.
+Tainted node repels pods that do not have a matching toleration
+Pods with the toleration can run on that node
+
+Example: A node can be tainted to only allow system critical pods. Your pod needs a toleration to run on it.
+Real benefit: Reserved nodes for specific workloads. For example, a node only for database pods.
+
+4. Pod Affinity and Anti-Affinity
+These rules are about pod to pod relationships.
+
+Type	            Meaning
+Pod Affinity	    Run this pod near another pod
+Pod Anti-Affinity	Do not run this pod near that other pod
+
+Use cases:
+
+High availability: Run pods on different nodes so a single node failure does not bring down the service
+Performance: Run pods close to each other to reduce network latency
+Real benefit: Control pod placement based on where other pods are running.
+
+5. Resource Requests and Limits
+Kubernetes only places a pod on a node with enough free resources.
+Example: If a pod requests 1 CPU and 1 GB of memory, it will not be scheduled on a node with less than 1 CPU and 1 GB free.
+Real benefit: Prevents one pod from starving other pods. Ensures pods get the resources they need.
+
+Summary Table
+Feature	            Purpose
+Node Selector	    Run on specific labeled nodes
+Node Affinity	    Prefer or require certain nodes
+Node Anti-Affinity	Avoid certain nodes
+Taints	            Repel pods without matching toleration
+Tolerations	        Allow pods to run on tainted nodes
+Pod Affinity	    Run near other specific pods
+Pod Anti-Affinity	Run away from specific pods
+Resource Requests	Minimum resources needed
+Resource Limits	    Maximum resources allowed
+
+The Big Picture
+Default scheduler behavior: Best effort based on available resources.
+
+With placement controls: You can enforce exactly where pods should or should not run.
+
+Control Type	        When to Use
+Node Selector	        Simple hardware requirements
+Node Affinity	        Complex node preferences
+Taints and Tolerations	Dedicated nodes for specific teams or workloads
+Pod Affinity	        Performance, low latency
+Pod Anti-Affinity	    High availability, fault tolerance
+Resource Requests	    Guarantee minimum resources
