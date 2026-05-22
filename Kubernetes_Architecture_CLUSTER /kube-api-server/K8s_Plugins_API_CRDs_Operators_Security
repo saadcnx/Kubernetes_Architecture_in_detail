@@ -1,0 +1,104 @@
+# Plugins, API, CRDs, Operators, and Security in Kubernetes
+
+1. Plugins in Kubernetes
+
+Plugins extend Kubernetes functionality. They add new features without changing Kubernetes core code.
+
+Types of Plugins
+Plugin Type	            What It Does	                    Examples
+CNI	                    Manages networking	                Calico, Flannel, Cilium
+CSI	                    Manages storage	                    Ceph, AWS EBS, NFS
+Admission Controller	Checks and modifies API requests	Custom validation
+Auth	                Handles authentication	            OpenID Connect, LDAP
+
+Real Benefit for IT Working
+You can choose the best networking or storage solution for your environment. No one size fits all. Cloud or on-premise, you have options.
+
+Use Case Examples
+
+Need custom network policy → Install Calico CNI plugin
+Need storage from AWS → Install EBS CSI plugin
+
+2. Kubernetes API
+The API is the brain of Kubernetes. Everything talks to Kubernetes through the API: kubectl, dashboard, automation tools.
+
+API Components
+
+Component	        Role
+kubectl	            Sends commands to API server
+Kube-apiserver	    Receives API requests, sends to correct component
+Webhook APIs	    Custom validation or modification
+
+Example
+kubectl get pods --watch sends a request to API server, and it keeps watching for changes.
+
+Real Benefit for IT Working
+Everything is controlled through one API. You can write automation tools, scripts, or custom UIs without learning complex internal details.
+
+3. CRDs - Custom Resource Definitions
+CRD lets you create your own custom Kubernetes objects.
+
+Kubernetes has built-in objects: Pod, Deployment, Service.
+CRDs let you define your own objects like Database, Robot, or TimeMachine.
+
+Simple Example
+After defining a CRD for "Database", you can do:
+kubectl get databases
+
+And "Database" becomes a real Kubernetes object.
+
+Real Benefit for IT Working
+You can model your business domain directly in Kubernetes. If your company manages databases, you can treat a database as a Kubernetes resource. No need for external scripts.
+
+4. Operators
+
+Operator = CRD + Custom Controller
+An operator watches CRDs and automatically manages them.
+
+Without Operator
+
+You create a Database CRD
+Kubernetes only stores it
+You manually create pods, scale, handle failures
+
+With Operator
+
+Operator automates everything
+Deploys database, scales it, handles failures
+You just define what you want, operator makes it happen
+
+Popular Operators
+
+Operator	            What It Does
+MongoDB Operator	    Manages MongoDB databases
+Cert-Manager	        Automatically issues TLS certificates
+Prometheus Operator	    Deploys and manages Prometheus monitoring
+
+Real Benefit for IT Working
+Operators bring expert knowledge into code. Instead of hiring a database expert to manage your database, the operator handles day 2 operations like backup, scaling, and recovery automatically.
+
+5. Security in Kubernetes
+Authentication - Who can access?
+Uses RBAC (Role-Based Access Control)
+Example: Create a role that allows get and list on pods only.
+
+Authorization - What can they do?
+Checks if user is allowed to perform the action.
+
+Admission Control - Filter requests
+Blocks unauthorized API requests before they reach Kubernetes.
+Example: Block deployments with root user privileges.
+
+Network Policies - Limit pod communication
+By default, all pods can talk to each other.
+Network policies block unauthorized traffic like a firewall.
+
+Example: Block all incoming traffic to a specific app.
+
+Secrets and Encryption - Protect sensitive data
+Never hardcode passwords in YAML files.
+Use Kubernetes Secrets instead.
+Secrets store data in Base64 encoding.
+
+Real Benefit for IT Working
+Security is built in layers. Even if one layer fails, others still protect your cluster. You can meet compliance requirements without buying external tools.
