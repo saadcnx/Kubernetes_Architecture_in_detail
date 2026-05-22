@@ -1,0 +1,60 @@
+HTTP/2 
+
+HTTP/2 is a faster version of HTTP/1.1.
+
+Problem with HTTP/1.1
+- It handles one request at a time. If a webpage needs HTML, CSS, and JS, it loads them one by one.
+- It opens and closes the connection again and again. This wastes time.
+- It sends data as plain text. Plain text is heavy and slow.
+
+How HTTP/2 Fixes These Problems
+
+1. Multiplexing
+
+HTTP/1.1 sends requests one by one like standing in a line.
+HTTP/2 sends all requests at the same time over one connection.
+
+Real benefit for IT working:
+If one request is slow, it does not block others. APIs and microservices work faster because they can handle many calls together without waiting.
+
+2. Binary Protocol
+
+HTTP/1.1 uses plain text which takes more space.
+HTTP/2 uses binary format which is smaller and faster to read.
+
+Real benefit for IT working:
+Less data transfer means lower bandwidth cost and faster response time for users and servers.
+
+3. Server Push
+
+Normally the browser asks for HTML, then CSS, then JS.
+In HTTP/2, the server can send CSS and JS before the browser even asks.
+
+Real benefit for IT working:
+Pages load faster without extra round trips. Good for Progressive Web Apps where speed matters.
+
+4. Single Connection
+
+HTTP/1.1 opens many connections. Each connection takes time.
+HTTP/2 uses one single connection for everything.
+
+Real benefit for IT working:
+Less CPU and memory usage on the server. Better for systems with many small requests like chat apps or live updates.
+
+Where HTTP/2 is Used
+Modern websites like Google, YouTube, Facebook.
+APIs and microservices where many small calls happen.
+Progressive Web Apps that need fast loading.
+
+Quick Comparison
+Feature	        HTTP/1.1    	HTTP/2
+Multiplexing	No	            Yes
+Data format	    Text	        Binary
+Server push	    No	            Yes
+Connections	    Multiple	    Single
+Best for	    Simple websites	Modern web, APIs, microservices
+
+Final Simple Verdict
+HTTP/1.1 is like an old bicycle.
+HTTP/2 is like a modern car. Faster, smoother, and built for today's internet.
+
