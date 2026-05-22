@@ -1,0 +1,34 @@
+Webhooks - External Authorization Check
+
+Simple Meaning
+When a request comes to Kubernetes, instead of deciding internally, Kubernetes asks an external server: "Should I allow this request or not?"
+
+Two Types of Webhooks
+Type	              What It Does
+Validating Webhook	Only checks if request is allowed. Cannot modify.
+Mutating Webhook	  Can modify the request before processing.
+
+Example Use Case
+You write a custom policy: "If pod image is not from approved registry, reject it."
+
+When someone tries to create a pod, Kubernetes asks your webhook server. Your server checks the image and replies Allow or Reject.
+
+Real Benefit for IT Working
+RBAC is good for standard permissions
+Webhooks give you full control
+You can integrate with your company's existing approval systems
+No need to change Kubernetes core code
+
+Authorization Methods Comparison
+Method	  Basis	          Usage	         Complexity
+RBAC	    Role	          Most common	   Simple
+ABAC	    Attributes	    Rare	         Complex
+Webhook	  External server	Advanced cases	Custom
+
+Complete Flow
+Request Arrives → Authentication → Authorization (RBAC/ABAC/Webhook) → Admission Controller → Resource Created
+
+Final Short Note
+RBAC does most of the authorization work in Kubernetes
+Use Webhooks when you need advanced or custom rules
+ABAC is rarely used because it is too complex to manage
