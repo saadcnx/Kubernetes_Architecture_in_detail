@@ -1,0 +1,43 @@
+HTTP vs HTTP/2 vs gRPC in Kubernetes
+
+First, Know the Protocols
+
+Protocol	Speed	    Best For
+HTTP/1.1	Slow	    Old websites, browser apps
+HTTP/2	    Fast	    Modern REST APIs, GraphQL
+gRPC    	Super Fast	Internal microservices communication
+Old RPC     (XML/SOAP)	Very Slow	Old systems, avoid if possible
+
+Simple Analogy
+HTTP/1.1 = Single lane road. One request, one response.
+HTTP/2 = Multi-lane highway. Many requests in one connection.
+gRPC = Bullet train. Fastest and lightest data transfer.
+
+Real Kubernetes Example
+You have a Pizza Order App in Kubernetes.
+Frontend (Website) → Talks to backend using HTTP/2
+Backend Services (microservices) → Talk to each other using gRPC
+
+Why?
+Frontend works with browsers using REST API (HTTP/2). Backend needs super fast internal communication so it uses gRPC.
+
+Simple Flow
+Browser → HTTP/2 REST API → Frontend Service → gRPC → Order Service, Inventory Service, Payment Service
+
+Rule to Remember
+
+Situation	            Protocol
+Browser to Frontend	    HTTP/2 + REST API
+Frontend to Backend     Services gRPC
+
+Real Benefit for IT Working
+HTTP/2 gives faster website loading and better browser support.
+gRPC gives very fast, lightweight communication between microservices because it uses Protobuf (binary format, like a zipped file).
+
+In Kubernetes, this combination saves server resources, reduces delay, and makes scaling easier.
+
+Kubernetes = Group of machines that runs your applications.
+
+
+Public users (browser) → Use HTTP/2 + REST API
+Internal microservices → Use gRPC + Protobuf
