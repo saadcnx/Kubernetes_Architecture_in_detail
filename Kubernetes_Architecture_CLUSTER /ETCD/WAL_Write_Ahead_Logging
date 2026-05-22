@@ -1,0 +1,101 @@
+WAL - Write-Ahead Logging 
+
+What is WAL?
+WAL is like keeping a diary of all changes before actually making them.
+
+Key Idea:
+
+First write changes to a log file
+Then apply changes to the main database
+If crash happens, replay the log to recover
+
+Real benefit: Zero data loss even if system crashes at the worst moment.
+
+Why WAL Matters - Failure Scenario
+
+Without WAL:
+You type paragraph 1 and 2
+Power fails
+You reopen document → Only paragraph 1 exists
+
+With WAL:
+
+You log "Add paragraph 1" then apply
+You log "Add paragraph 2" then apply
+
+Power fails
+
+Recovery reads log and replays both changes
+You reopen → Both paragraphs exist
+
+How etcd Uses WAL in Kubernetes
+When API server receives kubectl create pod:
+
+WAL entry is written: PUT /registry/pods/default/nginx with pod spec
+After log is safely written, etcd applies change to main database
+
+Real benefit: Kubernetes control plane can crash during deployment and recover exactly to the same state.
+
+WAL File Structure Example
+A typical WAL log file contains entries like:
+
+Entry	Transaction ID	Operation	Key	Value
+1	    101	PUT	        /key1	    value1
+2	    102	DELETE	    /key2	    -
+3	    103	PUT	        /key3	    value3
+
+The Tradeoff - Safety vs Speed
+Advantage	                            Disadvantage
+Guaranteed recovery after crashes	    Extra disk writes, slower performance
+Atomic operations, all or nothing	    Needs disk sync (fsync)
+Consistent database state	            Log management overhead
+
+
+Real World Analogies
+
+Chess Game
+
+WAL = Writing down moves before making them
+Crash = Someone bumps the table
+Recovery = Replay moves from your notes
+
+Bank Transactions
+
+WAL = Transaction ledger
+Crash = Teller computer dies
+Recovery = Rebuild accounts from ledger
+
+Performance Optimization Tricks
+
+Modern systems use:
+
+Group commits - Batch multiple writes together
+SSD storage - Much faster than HDDs
+
+Parallel log writing
+
+WAL in Action - etcd Example
+View etcd WAL files on control plane node:
+ls /var/lib/etcd/member/wal/
+
+Output shows .wal files with sequence numbers.
+
+When WAL Saves Your Cluster
+
+Scenario: Kubernetes control plane crashes during a deployment.
+
+On restart:
+
+etcd checks WAL files
+Replays unfinished operations
+Cluster returns to exact pre-crash state
+
+Real benefit: No manual recovery needed. No data corruption. Cluster resumes exactly where it left off.
+
+
+Quick Summary
+Term	Meaning
+WAL 	Write log first, then database
+fsync	Force log to disk immediately
+Replay	Apply log entries after crash
+Commit	When change is permanently saved

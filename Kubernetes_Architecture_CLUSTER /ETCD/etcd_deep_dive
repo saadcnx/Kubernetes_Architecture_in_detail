@@ -1,0 +1,66 @@
+Distributed Key-Value Store, WAL, Raft, and Protobuf 
+
+1. Distributed Key-Value Store
+A database that stores data as key-value pairs across multiple machines.
+Example: Phonebook where Key is "John" and Value is phone number "+92 300 1234567"
+Real benefit: If one machine crashes, other machines have the same data. Nothing is lost. High availability.
+
+2. WAL - Write-Ahead Logging
+Before writing data to the main database, it first logs the change to a file. If the system crashes, it recovers from this log.
+Real world example: Gmail saving a draft before you finish writing. Power goes out, but your email is still there.
+Real benefit: Prevents data loss during crashes.
+
+Downside: Slows down writes because every change must be logged first.
+
+3. WAL and Encryption
+By default, WAL logs are NOT encrypted because:
+Encryption adds processing overhead
+Slows down write operations
+WAL is meant for fast recovery
+
+How to secure WAL:
+Use disk encryption like LUKS or BitLocker
+Use TLS when sending WAL data across network
+Real benefit: You get both speed and security by encrypting at disk level instead of WAL level.
+
+4. Raft Consensus
+Raft is a consensus algorithm that ensures all nodes have the same data even if some fail.
+
+How it works:
+
+One node is the Leader
+Other nodes are Followers
+Leader handles all writes
+Followers sync data from Leader
+If Leader crashes, Followers elect a new Leader automatically
+
+Real world example: Like a democracy. President is leader, citizens are followers. If president dies, new election happens.
+Real benefit: Strong consistency across all nodes. No data conflicts. Automatic failover.
+
+5. Protobuf - Protocol Buffers
+Protobuf is a way to serialize data into a compact binary format. It replaces JSON in high-performance systems.
+
+Comparison:
+
+Format	    Size	    Speed	    Human Readable
+JSON	    Large	    Slow	    Yes
+Protobuf	Small	    Fast	    No (binary)
+
+
+Why Kubernetes and etcd use Protobuf:
+
+Smaller payload than JSON
+Faster to process
+Saves CPU and memory
+Efficient for high throughput systems
+
+Real benefit: 5x smaller, 10x faster than JSON. Critical for etcd and gRPC performance.
+
+Final Summary Table
+
+Concept	                            Simple Meaning	                Real Benefit
+Distributed Key-Value Store	        Data across multiple machines	High availability, no single point of failure
+WAL	                                Log before write	            Crash recovery, no data loss
+WAL Encryption                  	Not encrypted by default	    Speed first, security at disk level
+Raft	                            Leader and followers agreement	Strong consistency, automatic failover
+Protobuf	                        Binary format instead of JSON	5x smaller, 10x faster

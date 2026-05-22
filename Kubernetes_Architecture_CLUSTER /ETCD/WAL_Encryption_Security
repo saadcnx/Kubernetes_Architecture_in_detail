@@ -1,0 +1,55 @@
+Why WAL Data is Not Encrypted - And How to Secure It
+
+The Speed vs Security Tradeoff
+
+WAL prioritizes recovery speed over encryption for three main reasons:
+
+Reason	            Impact	                                    Example
+Performance	        Encryption adds 20-30% write latency	    1000 writes/sec becomes 700 writes/sec
+Recovery Urgency	Faster crash recovery is more important	    Emergency database restore needs speed
+Default Trust	    Assumes secure environment	                Like not encrypting RAM
+
+Real benefit: Keeping WAL unencrypted means your database recovers faster and handles more writes per second.
+
+What WAL Files Actually Contain - The Risk
+
+In etcd WAL files, you can find sensitive data:
+
+Kubernetes secrets (base64 encoded)
+Pod specifications
+Container images
+Pod IP addresses
+
+Real risk: If someone gains access to the control plane node, they can dump WAL files and extract secrets.
+
+Proper Security Approaches for WAL
+
+1. Filesystem Encryption - Best Practice
+Encrypt the entire disk partition where etcd stores data.
+Example tools: Linux LUKS, Windows BitLocker
+
+Steps: Create encrypted partition, open it, format, then mount at /var/lib/etcd
+
+2. Network Encryption
+Configure etcd with TLS for all peer communication.
+Settings needed: cert-file, key-file, client-cert-auth enabled
+
+3. Kubernetes-Specific Protections
+Use PodSecurityPolicy to restrict etcd pods:
+No privilege escalation
+Read-only root filesystem
+Use secrets for certificates
+
+Real-World Attack Scenario
+
+Without Protection:
+
+Attacker gains access to control plane node
+Runs command to dump WAL files and grep for secrets
+Extracts all Kubernetes secrets easily
+
+With Protection:
+
+Attacker sees encrypted files
+Cannot read any data without decryption key
+LUKS encrypted file shown as binary garbage
