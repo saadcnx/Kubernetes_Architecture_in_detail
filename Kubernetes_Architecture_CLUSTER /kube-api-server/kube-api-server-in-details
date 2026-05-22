@@ -1,0 +1,93 @@
+Kube-API Server - The Brain of Kubernetes
+
+Kube-API Server is the main entry point for all requests in a Kubernetes cluster. It handles communication between users, applications, and cluster components. It validates requests, applies security rules, and updates cluster state.
+
+1. Authentication - Who Are You?
+
+When you send a request like kubectl get pods, Kubernetes first checks who you are. This is authentication.
+Authentication means prove your identity.
+
+How Kubernetes Authenticates
+
+Method	               Used By
+TLS Certificates    	Kubelet, controllers, nodes
+Service Accounts    	Pods and services inside Kubernetes
+Bearer Tokens	        External tools like Helm
+OIDC (OpenID Connect)	Google, Azure, etc. login
+Webhook Token	        Custom authentication using APIs
+
+Example
+
+If you try to kubectl delete pod, API Server checks if your token is valid.
+
+Valid → Request goes to authorization
+Invalid → Request is denied
+
+Real Benefit
+Only verified people and services can access the cluster. No fake entries.
+
+2. Authorization - What Can You Do?
+
+Once Kubernetes knows who you are, it checks what actions you can perform.
+Authorization means checking permissions.
+
+How Kubernetes Handles Authorization
+
+Method	            Description
+RBAC	            Most common. Uses roles and bindings
+ABAC	            Uses JSON policy files
+Webhook	            Custom authorization via APIs
+Node Authorization	For kubelets to access only their own resources
+
+Example
+If you are a developer, you may only get pods but not delete them. If you try to delete without permission, request is denied.
+
+Real Benefit
+Different people get different access levels. Junior team cannot break production.
+
+3. Admission Control - Extra Security Checks
+
+After authentication and authorization, admission controllers check the request before applying it to the cluster.
+Think of it like airport security checking your luggage before boarding.
+
+What Admission Controllers Do
+
+Action	            Description
+Validate Requests	Ensure they follow cluster policies
+Modify Requests	    Auto add labels, annotations, or defaults
+Enforce Security	Block risky actions like root containers
+
+Common Admission Controllers
+
+Controller	                What It Does
+PodSecurityPolicy       	Blocks privileged containers
+ResourceQuota	            Enforces CPU and memory limits
+MutatingAdmissionWebhook	Auto adds missing labels or fields
+ValidatingAdmissionWebhook	Validates requests before applying
+
+Example
+
+If you create a pod that uses too much memory, ResourceQuota rejects it.
+If you create a pod without labels, MutatingAdmissionWebhook adds them automatically.
+
+Real Benefit
+Security and resource limits are enforced automatically. No one can bypass cluster rules.
+
+4. Watch for Updates - Real Time Tracking
+
+API Server watches the entire cluster and notifies clients of changes in real time.
+Think of it like a group where everyone gets instant updates.
+
+How Watch Works
+
+Clients like kubectl and monitoring tools subscribe to updates
+API Server pushes updates whenever resources change (new pods, deleted nodes)
+This prevents clients from constantly asking API Server, saving resources
+
+Example
+
+If a pod is deleted, all watching clients get instant notification
+kubectl get pods --watch shows real time updates without running the command repeatedly
+
+Real Benefit
+No constant polling. Cluster events reach controllers instantly. Less network and CPU waste.
