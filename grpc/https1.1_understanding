@@ -1,0 +1,36 @@
+HTTP/1.1 Explained Simply
+
+HTTP/1.1 is the old school web language. It works but it's slow compared to modern stuff.
+
+How it Works
+
+Think of it like passing notes in class. You (the client) write a note (request) and give it to the server. The server writes back (response) and gives it back to you. For every new note, you have to start a fresh conversation. Simple, but not efficient.
+
+The Speed Problem
+
+Imagine ordering pizza. Your first call is to ask for the menu. That needs a new connection. Your second call is to place the order. That needs another new connection. 
+Your third call is to check the status. Again, another new connection. Each call needs a completely new phone line. This is slow and wastes resources.
+
+Real Limitations and Why They Matter
+
+Here is the real headache with HTTP/1.1.
+
+- Head-of-line blocking. This is like having a single cashier handling all customers one by one. If the first customer takes forever, everyone else behind them just has to wait. Your second request cannot be processed until the first one is completely finished. 
+This kills performance when you have lots of requests.
+
+- No multiplexing. This means you cannot send multiple requests at once over a single connection. 
+Unlike gRPC which uses HTTP/2, where you can blast multiple requests down the same line simultaneously. 
+With HTTP/1.1, you have to open separate connections for many parallel requests, and browsers limit you to only 6 to 8 connections per domain. So you hit a wall fast.
+
+- Heavy headers. Every single request carries the full header information. It's like sending a photocopy of your full ID card with every single text message you send. The headers are also sent as plain readable text, which is bulky. 
+This wastes bandwidth, especially on mobile networks where every byte counts. It also makes repeated requests to the same server slower because nothing is compressed or remembered efficiently.
+
+# Why Do We Still Use It Then
+
+It is simple and works everywhere, kind of like old Nokia phones. All browsers understand it perfectly. 
+It's still good enough for many basic websites that do not have complex real-time needs. 
+So it hangs around because it is reliable and universal.
+
+gRPC vs HTTP/1.1 Direct Comparison
+
+If gRPC is a sports car on a wide highway (because it uses HTTP/2), then HTTP/1.1 is a bicycle on a crowded single street. One is built for raw speed and heavy traffic, the other is just for getting by simply.
