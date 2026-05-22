@@ -1,0 +1,42 @@
+Request Lifecycle 
+
+When write kubectl apply -f pod.yaml, then these 7 steps happens:
+
+The 7 Steps
+Step	        Name	        Simple Meaning	                    Fail Result
+1	            TLS	            Check if connection is secure	    Request dropped
+2	            Authentication	Who are you? Check your ID	        401 Unauthorized
+3	            Authorization	Can you do this? Check permissions	403 Forbidden
+4	            Mutating	    Modify YAML if needed (add defaults, sidecars)	-
+5	            Schema	        Check spelling and structure	    Request blocked
+6	            Validating	    Final policy check (allow or deny)	Request denied
+7	            etcd	        Save permanently in database	    -
+
+
+Two Background Processes
+After saving in etcd, API Server does two things automatically:
+
+1. Watch API
+API Server tells scheduler instantly: "New pod needs a node."
+Real benefit: No waiting. Instant response.
+
+2. Optimistic Concurrency Control
+If two people update same object at same time, only first wins. Second gets 409 conflict error.
+
+Real benefit: No data corruption.
+
+Cheat Sheet - One Line Each
+Authentication = who ur?
+Authorization = what you can do?
+Mutating = change thing
+Validating = Allow ya deny
+etcd = Database
+Watch API = Real time alert
+
+Real Benefit for IT Working:
+
+No fake user enters cluster
+No unauthorised action happens
+No bad YAML is saved
+Security policies are never bypassed
+Database remains clean and safe
