@@ -1,0 +1,76 @@
+HTTP vs HTTP/2 vs REST vs gRPC in Kubernetes
+
+1. HTTP/1.1 vs HTTP/2 - The Evolution
+
+HTTP/1.1 Problem
+
+One request at a time. If first request is slow, all others wait. This is called Head-of-Line Blocking.
+Opens a new connection for every request. Very heavy.
+
+HTTP/2 Solution
+
+Multiplexing: Many requests go together on one connection. No waiting.
+Binary Format: Converts data to binary bits. Machines read it faster.
+
+Real Benefit for IT Working
+
+In Kubernetes, services talk faster. Less delay and less CPU usage on servers.
+
+2. REST vs gRPC - API Design Styles
+
+REST
+
+Uses HTTP/1.1 or HTTP/2
+Uses JSON format (text)
+Easy for humans to read
+Works everywhere
+Problem: JSON is heavy, eats more CPU and bandwidth
+
+gRPC
+
+Made by Google
+Uses HTTP/2 only
+Uses Protobuf (binary format)
+5 times smaller than JSON
+10 times faster than JSON
+Has a strict contract file (.proto file) between services
+
+Real Benefit for IT Working
+Internal microservices in Kubernetes use gRPC to save network bandwidth and reduce CPU load.
+
+3. Streaming in gRPC
+Because of HTTP/2 and gRPC, you can do more than one request-response.
+
+Four types of streaming:
+
+Type	            How it works	                Example
+Unary	            One request, one response	    Normal API call
+Server Streaming	One request, many responses	  Live sports scores
+Client Streaming	Many requests, one response	  Heavy file upload
+Bidirectional     Streaming	Both send anytime   without waiting	Real time chat app
+
+Real Benefit for IT Working
+You can build live features without opening many connections. Log shipping and real time sync become easy.
+
+4. How This Works Inside Kubernetes
+
+A. Control Plane Communication
+API Server, etcd, Scheduler, and Kubelet talk to each other using gRPC and Protobuf.
+That is why kubectl commands and cluster updates happen instantly.
+
+B. Ingress Controllers
+External traffic comes in through Ingress (Nginx, Envoy, Traefik).
+If your backend uses gRPC, you must configure Ingress for HTTP/2 and gRPC routing.
+Normal HTTP/1.1 load balancers cannot handle gRPC because they cannot handle multiplexed single connections.
+
+C. Service Mesh - The Multiplexing Savior
+When hundreds of microservices talk to each other, opening separate connections for each destroys the network.
+Service mesh like Istio or Linkerd automatically upgrades traffic to HTTP/2 multiplexing.
+Thousands of requests travel on one connection without network lag.
+
+
+Public facing traffic (browser to app) = REST + HTTP/2
+Internal service to service in Kubernetes = gRPC + Protobuf
+Control plane in Kubernetes = gRPC + Protobuf
+
+Service mesh = automatically gives you HTTP/2 multiplexing
