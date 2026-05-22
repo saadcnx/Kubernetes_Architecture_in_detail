@@ -1,0 +1,42 @@
+ABAC - Attribute-Based Access Control
+
+Simple Meaning
+ABAC gives access based on user attributes like department, location, role, or time of day.
+Example rule: If you are in HR department and sitting in Lahore office, then you get access.
+
+How ABAC Works
+
+Check user attributes
+
+If attributes match the rule → Access allowed
+If attributes do not match → Access denied
+
+Example Rule in ABAC
+This rule means: User "saad" can create pods in namespace "default".
+
+Field	        Value
+User	        saad
+Namespace	    default
+Resource	    pods
+Verb	        create
+
+ABAC vs RBAC
+
+Feature	        ABAC	                                        RBAC
+Based on	    User attributes (department, location, role)	Roles and role bindings
+Complexity	    High, hard to manage	                        Simple, easy to manage
+Popularity	    Rarely used	                                    Very popular, standard
+Example	        If user is from HR and Lahore, allow	        If user has role "developer", allow
+
+Why ABAC is Less Popular
+
+Rules become very complex when you have many attributes
+Hard to understand who has what access
+
+Difficult to audit
+
+RBAC is simpler and covers most use cases
+
+Real Benefit for IT Working
+ABAC is useful when you need very fine grained access based on user properties like location, time, or department. But for most clusters, RBAC is enough and much easier to manage.
+
