@@ -1,0 +1,63 @@
+CRD - Custom Resource Definition 
+
+What is CRD?
+Kubernetes has default resources like:
+
+Pods
+Deployments
+Services
+
+But if you want something extra, like a "Robot" resource or "TimeMachine" resource, CRD lets you create your own custom resources.
+CRD = Custom Resource Definition. It lets you define your own objects in Kubernetes.
+
+Simple Example
+Normal Kubernetes = Standard menu items like pizza, cold drink, dessert.
+CRD = Custom menu item like "Special Pizza with your own toppings". You define how it works. Kubernetes does not know it yet. You have to teach Kubernetes.
+
+How CRD Works - Step by Step
+
+Step 1: Define the CRD
+Write a YAML file that tells Kubernetes about your new resource.
+Example: Creating a "HomeworkSolver" resource.
+
+Step 2: Create a Custom Object
+Now use your new resource to create an actual object.
+Example: Create "nobita-maths-helper" of type HomeworkSolver with subject Maths and deadline date.
+
+Step 3: Apply to Kubernetes
+Run kubectl apply -f your-file.yaml
+
+Step 4: Check Your Resource
+Run kubectl get homeworksolvers
+
+You will see your custom object listed.
+
+CRD vs Normal Resources
+Normal Resource	                CRD
+Pod, Service, Deployment	    HomeworkSolver, Robot, TimeMachine
+Kubernetes already knows them	You define them
+kubectl get pods	            kubectl get homeworksolvers
+
+Real World Use Cases for CRD
+
+Use Case	        What It Does
+Database Operator	Automatically manages databases
+Game Server	        Auto scales Minecraft servers
+AI Model Trainer	Runs machine learning jobs in Kubernetes
+
+Real Benefit for IT Working
+
+CRD allows you to extend Kubernetes for your specific needs.
+
+Without CRD: You can only use what Kubernetes gives you.
+With CRD: You can model your business domain directly in Kubernetes.
+
+Example: If your company manages databases, you can create a "Database" CRD and then use kubectl get databases. No need to write custom scripts.
+
+CRD is the foundation of Kubernetes operators. Operators automate complex applications using custom resources.
+
+Quick Summary
+Term	                Meaning
+CRD	                    Defines a new resource type
+CR (Custom Resource)	An actual object of that type
+Operator	            Controller that watches CRD and takes actions
